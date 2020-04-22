@@ -16,10 +16,6 @@ export default new Router({
     {
       path: '/',
       redirect: '/movie'
-    },
-    {
-      path: '*',
-      redirect: '/movie'
     }
   ]
 })
