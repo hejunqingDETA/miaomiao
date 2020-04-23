@@ -128,7 +128,7 @@ export default {
         this.$store.commit('City/CITY_INFO', {nm, id});
         window.localStorage.setItem('nowNm', nm);
         window.localStorage.setItem('nowId', id);
-        this.$router.push('/movie/nowPlaying')
+        this.$router.push('/movie/nowplaying')
     }
   }
 }

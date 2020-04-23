@@ -31,16 +31,23 @@ export default {
   data(){
     return{
       cinemaList: [],
-      isLoading: true
+      isLoading: true,
+      prevCityId: -1
     }
   },
-  mounted(){
-    this.axios.get('/data/cinemaList.json').then((res) => {
+  activated(){
+    // this.axios.get('/data/cinemaList.json').then((res) => {
+
+    let cityId = this.$store.state.City.id;
+    if(this.prevCityId === cityId){return};
+    this.isLoading = true;
+    this.axios.get('/api/cinemaList?cityId='+ cityId).then((res) => {
       // console.log(res)
       let msg = res.statusText;
       if(msg === 'OK'){
-        this.cinemaList = res.data.cinemas;
+        this.cinemaList = res.data.data.cinemas;
         this.isLoading = false;
+        this.prevCityId = cityId;
       }
     })
   },

@@ -4,9 +4,9 @@
     <Scroller v-else>
         <ul>
             <li v-for="item in comingList" :key="item.id">
-                <div class="pic_show"><img :src="item.img | setWH('128.180')"></div>
+                <div class="pic_show" @tap="handleToDetail(item.id)"><img :src="item.img | setWH('128.180')"></div>
                 <div class="info_list">
-                    <h2>{{item.nm}} <img v-if="item.version" src="@/assets/maxs.png"/></h2>
+                    <h2 @tap="handleToDetail(item.id)">{{item.nm}} <img v-if="item.version" src="@/assets/maxs.png"/></h2>
                     <p><span class="person">{{item.wish}}</span> 人想看</p>
                     <p>主演: {{item.star}}</p>
                     <p>{{item.rt}}上映</p>
@@ -26,19 +26,30 @@ export default {
   data(){
       return{
         comingList: [],
-        isLoading: true
+        isLoading: true,
+        prevCityId: -1
       }
   },
-  mounted(){
-     this.axios.get('/data/ComingList.json').then((res) => {
-        console.log(res)
-        let msg = res.statusText;
-        if(msg === 'OK'){
-            this.comingList = res.data.coming;
-            this.isLoading = false
+  activated(){
+
+    let cityId = this.$store.state.City.id;
+    if(this.prevCityId === cityId){return};
+    this.isLoading = true;
+    this.axios.get('/api/movieComingList?cityId=' + cityId).then((res) => {
+        // console.log(res)
+        let msg = res.data.msg;
+        if(msg === 'ok'){
+            this.comingList = res.data.data.comingList;
+            this.isLoading = false;
+            this.prevCityId = cityId;
         }
         
     }) 
+  },
+  methods:{
+      handleToDetail(movieId){
+        this.$router.push('/movie/detail/2/' + movieId)
+      }
   }
 }
 </script>

@@ -5,9 +5,9 @@
         <ul>
             <li class="pullDown">{{ pullDownMsg }}</li>
             <li v-for="item in movieList" :key="item.id">
-                <div class="pic_show" @tap="handleToDetail"><img :src="item.img | setWH('128.180')"></div>
+                <div class="pic_show" @tap="handleToDetail(item.id)"><img :src="item.img | setWH('128.180')"></div>
                 <div class="info_list">
-                    <h2>{{item.nm}} <img v-if="item.version" src="@/assets/maxs.png"/></h2>
+                    <h2 @tap="handleToDetail(item.id)">{{item.nm}} <img v-if="item.version" src="@/assets/maxs.png"/></h2>
                     <p>观众评 <span class="grade">{{item.sc}}</span></p>
                     <p>主演: {{item.star}}</p>
                     <p>{{item.showInfo}}</p>
@@ -30,16 +30,23 @@ export default {
       return{
         movieList: [],
         pullDownMsg: '',
-        isLoading: true
+        isLoading: true,
+        prevCityId: -1
       }
   },
   activated(){
-    this.axios.get('/data/movieOnInfoList.json').then((res) =>{
+    // this.axios.get('/data/movieOnInfoList.json').then((res) =>{
+
+    let cityId = this.$store.state.City.id;
+    if(this.prevCityId === cityId){return};
+    this.isLoading = true;
+    this.axios.get('/api/movieOnInfoList?cityId=' + cityId).then((res) =>{
         // console.log(res)
       let msg = res.statusText
       if(msg === 'OK'){
-        this.movieList = res.data.movies;
+        this.movieList = res.data.data.movieList;
         this.isLoading = false;
+        this.prevCityId = cityId;
         // 插入插件better-scroll
         // this.$nextTick(() =>{
         //   let scroll = new BScroll(this.$refs.movie_body, {
@@ -75,8 +82,9 @@ export default {
     })
   },
   methods:{
-    handleToDetail(){
-        console.log('handleToDetail')
+    handleToDetail(movieId){
+        // console.log(movieId)
+        this.$router.push('/movie/detail/1/' + movieId)
     },
     handleToScroll(pos){
         if(pos.y > 30){
