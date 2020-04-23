@@ -14,18 +14,32 @@ export default {
       {
         path: 'nowplaying',
         component: () => import('@/components/NowPlaying'),
-        query:{
-            t:Date.now()
-        }
       },
       {
         path: 'search',
         component: () => import('@/components/Search'),
       },
       {
-        // path: '/movie',
-        // redirect: '/movie/nowplaying'
-
+        path: 'detail/1/:movieId',
+        components: {
+          default: () => import('@/components/NowPlaying'),
+          detail:() => import('@/views/Movie/detail')
+        },
+        props: {
+          detail: true
+        }
+      },
+      {
+        path: 'detail/2/:movieId',
+        components: {
+          default: () => import('@/components/ComingSoon'),
+          detail:() => import('@/views/Movie/detail')
+        },
+        props: {
+          detail: true
+        }
+      },
+      {
         path: '/movie',
         redirect: to => {
             return '/movie/nowplaying'

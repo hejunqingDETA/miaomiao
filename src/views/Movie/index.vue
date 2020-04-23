@@ -15,10 +15,11 @@
 				</router-link>
 			</div>
       <keep-alive>
-        <router-view :key='$route.path + $route.query.t' />
+        <router-view />
       </keep-alive>
     </div>
     <TabBar />
+    <router-view name="detail" />
   </div>
 </template>
 
@@ -36,16 +37,20 @@ export default {
   mounted(){
 
     setTimeout(() =>{
-      this.axios.get('/data/cityList.json').then((res) => {
+      // this.axios.get('/data/cityList.json').then((res) => {
+      this.axios.get('/api/getLocation').then((res) => {
         let msg = res.statusText;
         
-        let nm = '深圳';
-        let id = 30;
-        if(this.$store.state.City.id == id){return};
+        // let nm = '深圳';
+        // let id = 30;
+        
         if(msg === 'OK'){
+          let nm = res.data.data.nm;
+          let id = res.data.data.id;
+          if(this.$store.state.City.id == id){return};
           messageBox({
             title: '定位',
-            content: '深圳',
+            content: nm,
             cancel: '取消',
             ok: '切换定位',
             handleCancel(){
@@ -69,7 +74,7 @@ export default {
   watch:{
     $route(to,from){
       if(to.path === '/movie'){
-        this.$router.push({path:'/nowplaying'})
+        this.$router.push({path:'/movie/nowplaying'})
       }   
     }
   }
