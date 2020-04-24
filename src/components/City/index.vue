@@ -49,11 +49,12 @@ export default {
         this.hotList = JSON.parse(hotList)
         this.isLoading = false
       }else{
-        this.axios.get('/data/cityList.json').then((res) => {
-            // console.log(res)
+        // this.axios.get('/data/cityList.json').then((res) => {
+        this.axios.get('/api/cityList').then((res) => {
+            console.log(res)
             let msg = res.statusText;
             if(msg === 'OK'){
-                let cities = res.data.cts;
+                let cities = res.data.data.cities;
                 this.isLoading = false
 
                 let { cityList, hotList } = this.formatCityList(cities)
